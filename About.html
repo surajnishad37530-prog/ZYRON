@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Architecture & Philosophy | ZYRON OS</title>
+    <meta name="description" content="Discover the philosophy and architecture behind Zyron - the high-performance personal operating system engineered for growth.">
+    <!-- Inline Theme Init Script to avoid FOUC -->
+    <script>
+        if (localStorage.getItem('zyron_theme') === 'light') {
+            document.documentElement.classList.remove('dark');
+        } else {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Outfit', 'sans-serif'] },
+                    colors: {
+                        zbg: '#0D0D0D',
+                        zblue: '#00F0FF',
+                        zpurple: '#8A2BE2',
+                        zgreen: '#00FF66',
+                        zorange: '#FF9900',
+                    },
+                    boxShadow: {
+                        'neon': '0 0 15px rgba(0, 240, 255, 0.25)',
+                        'neon-purple': '0 0 15px rgba(138, 43, 226, 0.3)'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-slate-50 text-slate-900 dark:bg-zbg dark:text-white min-h-screen antialiased selection:bg-zblue selection:text-black flex flex-col relative transition-colors duration-200">
+
+    <!-- Ambient Glow Effects -->
+    <div class="absolute w-[500px] h-[500px] bg-gradient-to-br from-zblue/10 to-transparent rounded-full blur-3xl -top-36 -left-36 pointer-events-none opacity-40 dark:opacity-70"></div>
+    <div class="absolute w-[500px] h-[500px] bg-gradient-to-br from-zpurple/10 to-transparent rounded-full blur-3xl bottom-10 -right-36 pointer-events-none opacity-40 dark:opacity-70"></div>
+
+    <!-- UNIFIED RESPONSIVE NAVBAR -->
+    <header class="sticky top-0 z-40 bg-white/80 dark:bg-[#0D0D0D]/80 border-b border-slate-200 dark:border-white/10 backdrop-blur-xl">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="index.html" class="flex items-center gap-3 group cursor-pointer">
+                <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-zblue to-zpurple shadow-md flex items-center justify-center font-black text-black text-lg group-hover:scale-105 transition-transform">
+                    Z
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-xl sm:text-2xl font-extrabold tracking-widest text-slate-900 dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-white dark:via-gray-200 dark:to-gray-400">
+                        ZYRON
+                    </span>
+                    <span class="text-[9px] font-mono uppercase bg-slate-200 dark:bg-white/10 text-slate-700 dark:text-zblue px-1.5 py-0.5 rounded tracking-widest font-bold">OS</span>
+                </div>
+            </a>
+
+            <!-- Desktop Navigation Links -->
+            <div class="hidden md:flex items-center gap-8 text-sm font-semibold">
+                <a href="index.html" data-nav-link="dashboard" class="text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white transition-colors flex items-center gap-1.5">
+                    <span>Dashboard</span>
+                </a>
+                <a href="About.html" data-nav-link="about" class="text-zblue font-bold flex items-center gap-1.5">
+                    <span>Philosophy & Architecture</span>
+                </a>
+            </div>
+
+            <!-- Auth & Controls Section -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <!-- Theme Toggle Button (Always present in static DOM) -->
+                <button id="theme-toggle-btn" onclick="toggleTheme()" class="p-2 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-gray-300 hover:border-zblue/50 transition-all focus:outline-none" title="Toggle Theme" aria-label="Toggle Theme">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400 hover:rotate-45 transition-transform"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                </button>
+
+                <div id="nav-auth-section"></div>
+
+                <!-- Mobile Menu Hamburger Button -->
+                <button onclick="toggleMobileNav()" id="mobile-menu-btn" class="md:hidden p-2 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-gray-300 hover:text-slate-900 dark:hover:text-white transition-colors focus:outline-none" aria-label="Toggle Navigation Menu">
+                    <svg id="hamburger-icon-bars" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                    <svg id="hamburger-icon-close" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Mobile Navigation Drawer -->
+        <div id="mobile-nav-drawer" class="md:hidden hidden"></div>
+    </header>
+
+    <!-- Main About Container -->
+    <main class="flex-grow relative z-10">
+
+        <!-- 1. HERO SECTION -->
+        <section class="max-w-5xl mx-auto px-4 pt-16 pb-20 text-center space-y-8">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-zpurple/40 bg-zpurple/10 text-zpurple text-xs font-mono font-bold uppercase tracking-widest">
+                <span class="w-2 h-2 rounded-full bg-zpurple animate-pulse"></span>
+                <span>SYSTEM ARCHITECTURE // v2.4</span>
+            </div>
+
+            <h1 class="text-4xl sm:text-6xl md:text-7xl font-black text-slate-900 dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-b dark:from-white dark:via-gray-100 dark:to-gray-500 tracking-tight leading-none">
+                Engineered for <br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-zblue via-indigo-500 to-zpurple">
+                    Human Potential.
+                </span>
+            </h1>
+
+            <p class="text-base sm:text-lg md:text-xl text-slate-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed font-normal">
+                Zyron is not another superficial to-do list. It is an algorithmic personal operating system built to eliminate willpower fatigue, automate daily habit momentum, and quantify your discipline without emotion.
+            </p>
+
+            <!-- Quick Action CTAs -->
+            <div class="flex flex-wrap items-center justify-center gap-4 pt-4">
+                <a href="index.html" class="bg-gradient-to-r from-zblue to-zpurple text-black font-extrabold text-sm px-7 py-3.5 rounded-2xl shadow-md hover:opacity-90 hover:scale-105 transition-all">
+                    Launch Dashboard Telemetry
+                </a>
+                <a href="Register-Login.html" class="bg-white dark:bg-white/10 hover:bg-slate-100 dark:hover:bg-white/15 border border-slate-300 dark:border-white/15 text-slate-900 dark:text-white font-bold text-sm px-7 py-3.5 rounded-2xl transition-all shadow-sm">
+                    Access Portal →
+                </a>
+            </div>
+
+            <!-- Telemetry Metrics Bar -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto pt-10">
+                <div class="bg-white dark:bg-white/[0.03] rounded-3xl p-4 border border-slate-200 dark:border-white/10 shadow-sm dark:shadow-none">
+                    <p class="text-2xl sm:text-3xl font-black text-zblue font-mono">99.4%</p>
+                    <p class="text-[11px] text-slate-500 dark:text-gray-400 uppercase tracking-wider font-semibold mt-1">Execution Fidelity</p>
+                </div>
+                <div class="bg-white dark:bg-white/[0.03] rounded-3xl p-4 border border-slate-200 dark:border-white/10 shadow-sm dark:shadow-none">
+                    <p class="text-2xl sm:text-3xl font-black text-zpurple font-mono">&lt; 50ms</p>
+                    <p class="text-[11px] text-slate-500 dark:text-gray-400 uppercase tracking-wider font-semibold mt-1">Local-First Latency</p>
+                </div>
+                <div class="bg-white dark:bg-white/[0.03] rounded-3xl p-4 border border-slate-200 dark:border-white/10 shadow-sm dark:shadow-none">
+                    <p class="text-2xl sm:text-3xl font-black text-zgreen font-mono">100%</p>
+                    <p class="text-[11px] text-slate-500 dark:text-gray-400 uppercase tracking-wider font-semibold mt-1">Client Privacy</p>
+                </div>
+                <div class="bg-white dark:bg-white/[0.03] rounded-3xl p-4 border border-slate-200 dark:border-white/10 shadow-sm dark:shadow-none">
+                    <p class="text-2xl sm:text-3xl font-black text-zorange font-mono">0.0</p>
+                    <p class="text-[11px] text-slate-500 dark:text-gray-400 uppercase tracking-wider font-semibold mt-1">Ad Fluff / Tracking</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. FOUR CORE PILLARS (BENTO GRID) -->
+        <section class="max-w-7xl mx-auto px-4 py-16">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <h2 class="text-xs uppercase tracking-widest text-zblue font-mono font-bold mb-2">CORE PROTOCOLS</h2>
+                <h3 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">The Four Pillars of Zyron</h3>
+                <p class="text-sm text-slate-500 dark:text-gray-400 mt-2">Engineered from behavioral psychology and high-throughput systems design.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Pillar 1 -->
+                <div class="bg-white dark:bg-white/[0.03] rounded-3xl p-8 border border-slate-200 dark:border-white/10 relative overflow-hidden group hover:border-zblue/50 transition-all shadow-sm dark:shadow-none">
+                    <div class="w-12 h-12 rounded-2xl bg-zblue/10 border border-zblue/30 text-zblue flex items-center justify-center text-2xl mb-6 shadow-sm">
+                        ⚡
+                    </div>
+                    <h4 class="text-xl font-bold mb-3 text-slate-900 dark:text-white">Algorithmic Daily Score</h4>
+                    <p class="text-sm text-slate-600 dark:text-gray-400 leading-relaxed">
+                        Rather than checking arbitrary checkboxes, Zyron calculates your daily output into an exact 0–100 mathematical quotient. High friction tasks are weighted with higher XP and category telemetry, providing instant feedback on whether you won the day.
+                    </p>
+                    <div class="mt-6 flex items-center gap-3 text-xs text-zblue font-mono">
+                        <span>• Dynamic SVG Telemetry</span>
+                        <span>• Category Balancing</span>
+                    </div>
+                </div>
+
+                <!-- Pillar 2 -->
+                <div class="bg-white dark:bg-white/[0.03] rounded-3xl p-8 border border-slate-200 dark:border-white/10 relative overflow-hidden group hover:border-zpurple/50 transition-all shadow-sm dark:shadow-none">
+                    <div class="w-12 h-12 rounded-2xl bg-zpurple/10 border border-zpurple/30 text-zpurple flex items-center justify-center text-2xl mb-6 shadow-sm">
+                        🎮
+                    </div>
+                    <h4 class="text-xl font-bold mb-3 text-slate-900 dark:text-white">Gamified XP & Level Progression</h4>
+                    <p class="text-sm text-slate-600 dark:text-gray-400 leading-relaxed">
+                        Discipline should trigger positive neurochemical reinforcement. Every mission completed awards hard experience points (+10 to +30 XP). Accumulate XP to level up your status from Operator to Apex Commander, with real-time level metrics.
+                    </p>
+                    <div class="mt-6 flex items-center gap-3 text-xs text-zpurple font-mono">
+                        <span>• Difficulty Multipliers</span>
+                        <span>• Level Threshold Engine</span>
+                    </div>
+                </div>
+
+                <!-- Pillar 3 -->
+                <div class="bg-white dark:bg-white/[0.03] rounded-3xl p-8 border border-slate-200 dark:border-white/10 relative overflow-hidden group hover:border-zgreen/50 transition-all shadow-sm dark:shadow-none">
+                    <div class="w-12 h-12 rounded-2xl bg-zgreen/10 border border-zgreen/30 text-zgreen flex items-center justify-center text-2xl mb-6 shadow-sm">
+                        🤖
+                    </div>
+                    <h4 class="text-xl font-bold mb-3 text-slate-900 dark:text-white">Contextual AI Coach Diagnostics</h4>
+                    <p class="text-sm text-slate-600 dark:text-gray-400 leading-relaxed">
+                        Zyron’s built-in heuristic coach monitors your execution velocity. Whether you haven't started, are halfway through the grind, or completed a flawless 100% execution day, you receive sharp, stoic, and contextual coaching cues.
+                    </p>
+                    <div class="mt-6 flex items-center gap-3 text-xs text-zgreen font-mono">
+                        <span>• Stoic Momentum Logic</span>
+                        <span>• Velocity Analysis</span>
+                    </div>
+                </div>
+
+                <!-- Pillar 4 -->
+                <div class="bg-white dark:bg-white/[0.03] rounded-3xl p-8 border border-slate-200 dark:border-white/10 relative overflow-hidden group hover:border-zorange/50 transition-all shadow-sm dark:shadow-none">
+                    <div class="w-12 h-12 rounded-2xl bg-zorange/10 border border-zorange/30 text-zorange flex items-center justify-center text-2xl mb-6 shadow-sm">
+                        🔒
+                    </div>
+                    <h4 class="text-xl font-bold mb-3 text-slate-900 dark:text-white">Local-First Zero-Cloud Privacy</h4>
+                    <p class="text-sm text-slate-600 dark:text-gray-400 leading-relaxed">
+                        Your personal routines, fitness goals, and financial habits should never be stored on corporate servers or sold to data brokers. Zyron operates entirely within your browser’s high-speed local storage. 100% offline capable, instant, and private.
+                    </p>
+                    <div class="mt-6 flex items-center gap-3 text-xs text-zorange font-mono">
+                        <span>• Instant Browser Storage</span>
+                        <span>• Zero Surveillance</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. PROTOCOL TIMELINE (HOW IT WORKS) -->
+        <section class="max-w-5xl mx-auto px-4 py-16">
+            <div class="text-center max-w-2xl mx-auto mb-14">
+                <h2 class="text-xs uppercase tracking-widest text-zpurple font-mono font-bold mb-2">OPERATIONAL FLOW</h2>
+                <h3 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">How Zyron Operates</h3>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Step 1 -->
+                <div class="bg-white dark:bg-white/[0.03] rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center gap-6 border border-slate-200 dark:border-white/10 shadow-sm dark:shadow-none">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-zblue to-zpurple text-black font-black text-lg flex items-center justify-center flex-shrink-0 shadow-md">
+                        01
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-lg font-bold text-slate-900 dark:text-white mb-1">Define Non-Negotiable Protocols</h4>
+                        <p class="text-sm text-slate-600 dark:text-gray-400">
+                            Configure your daily missions across five foundational life systems: Fitness, Deep Work, Learning, Mindset, and Money. Assign difficulty levels (Easy, Medium, Hard) to determine XP weighting.
+                        </p>
+                    </div>
+                    <div class="text-xs font-mono text-slate-500 dark:text-gray-500 bg-slate-100 dark:bg-white/5 px-3 py-1.5 rounded-xl">
+                        PROTOCOL_INIT
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="bg-white dark:bg-white/[0.03] rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center gap-6 border border-slate-200 dark:border-white/10 shadow-sm dark:shadow-none">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-zblue to-zpurple text-black font-black text-lg flex items-center justify-center flex-shrink-0 shadow-md">
+                        02
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-lg font-bold text-slate-900 dark:text-white mb-1">Execute Without Emotion</h4>
+                        <p class="text-sm text-slate-600 dark:text-gray-400">
+                            Execute missions without relying on fluctuating motivation. Check off completed missions with zero UI latency and audible electronic sound feedback to stimulate execution velocity.
+                        </p>
+                    </div>
+                    <div class="text-xs font-mono text-slate-500 dark:text-gray-500 bg-slate-100 dark:bg-white/5 px-3 py-1.5 rounded-xl">
+                        SYSTEM_EXECUTE
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="bg-white dark:bg-white/[0.03] rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center gap-6 border border-slate-200 dark:border-white/10 shadow-sm dark:shadow-none">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-zblue to-zpurple text-black font-black text-lg flex items-center justify-center flex-shrink-0 shadow-md">
+                        03
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-lg font-bold text-slate-900 dark:text-white mb-1">Compound Momentum & Level Up</h4>
+                        <p class="text-sm text-slate-600 dark:text-gray-400">
+                            Watch your Daily Score ring complete, track your multi-day unbroken streaks, level up your profile, and receive AI coaching diagnostics as your discipline compounds daily.
+                        </p>
+                    </div>
+                    <div class="text-xs font-mono text-slate-500 dark:text-gray-500 bg-slate-100 dark:bg-white/5 px-3 py-1.5 rounded-xl">
+                        MOMENTUM_LOCK
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. THE ZYRON MANIFESTO -->
+        <section class="max-w-4xl mx-auto px-4 py-16">
+            <div class="bg-white dark:bg-white/[0.03] rounded-3xl p-8 sm:p-12 border border-slate-200 dark:border-white/10 text-center space-y-6 shadow-sm dark:shadow-none">
+                <div class="text-3xl text-zblue">“</div>
+                <blockquote class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900 dark:text-gray-200 leading-snug tracking-tight">
+                    We do not rise to the level of our goals.<br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-zblue to-zpurple">
+                        We fall to the level of our systems.
+                    </span>
+                </blockquote>
+                <p class="text-xs uppercase tracking-widest text-slate-500 dark:text-gray-400 font-mono font-bold">— James Clear, Atomic Habits</p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 text-left border-t border-slate-100 dark:border-white/10">
+                    <div class="p-3">
+                        <p class="text-xs font-mono text-zblue font-bold mb-1">RULE 01</p>
+                        <p class="text-sm font-semibold text-slate-900 dark:text-white">Systems over Willpower</p>
+                        <p class="text-xs text-slate-500 dark:text-gray-400 mt-1">Willpower is finite; algorithmic habits are perpetual.</p>
+                    </div>
+                    <div class="p-3">
+                        <p class="text-xs font-mono text-zpurple font-bold mb-1">RULE 02</p>
+                        <p class="text-sm font-semibold text-slate-900 dark:text-white">Telemetry over Feelings</p>
+                        <p class="text-xs text-slate-500 dark:text-gray-400 mt-1">Don't guess how your day went. Measure the score.</p>
+                    </div>
+                    <div class="p-3">
+                        <p class="text-xs font-mono text-zgreen font-bold mb-1">RULE 03</p>
+                        <p class="text-sm font-semibold text-slate-900 dark:text-white">Compound Velocity</p>
+                        <p class="text-xs text-slate-500 dark:text-gray-400 mt-1">A 1% daily improvement yields a 37x annual transformation.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. CALL TO ACTION BANNER -->
+        <section class="max-w-5xl mx-auto px-4 py-16">
+            <div class="bg-gradient-to-r from-zblue/10 via-zpurple/10 to-transparent rounded-3xl p-8 sm:p-12 border border-slate-200 dark:border-zblue/30 text-center relative overflow-hidden shadow-sm dark:shadow-none">
+                <h3 class="text-2xl sm:text-4xl font-extrabold mb-3 text-slate-900 dark:text-white">
+                    Ready to Upgrade Your Daily Operating System?
+                </h3>
+                <p class="text-sm sm:text-base text-slate-600 dark:text-gray-300 max-w-xl mx-auto mb-8">
+                    Take control of your daily habits, eliminate distractions, and start measuring your momentum today.
+                </p>
+                <div class="flex flex-wrap items-center justify-center gap-4">
+                    <a href="index.html" class="bg-gradient-to-r from-zblue to-zpurple text-black font-extrabold text-sm px-8 py-3.5 rounded-2xl shadow-md hover:opacity-90 hover:scale-105 transition-all">
+                        Launch Live Dashboard
+                    </a>
+                    <a href="Register-Login.html" class="bg-white dark:bg-white/10 hover:bg-slate-100 dark:hover:bg-white/15 text-slate-900 dark:text-white font-bold text-sm px-8 py-3.5 rounded-2xl transition-all border border-slate-300 dark:border-white/20 shadow-sm">
+                        Create Operator Account
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Shared Footer -->
+    <footer class="border-t border-slate-200 dark:border-white/10 bg-white/80 dark:bg-[#0D0D0D]/80 py-6 px-4 text-center text-xs text-slate-500 dark:text-gray-500">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-zgreen"></span>
+                <span class="font-mono text-[11px]">System Status: All Nodes Active</span>
+            </div>
+            <p>© 2026 ZYRON OS. Engineered for Uncompromising Execution.</p>
+            <div class="flex items-center gap-4 text-slate-500 dark:text-gray-400">
+                <a href="index.html" class="hover:text-slate-900 dark:hover:text-white transition-colors">Dashboard</a>
+                <a href="Register-Login.html" class="hover:text-slate-900 dark:hover:text-white transition-colors">Access Portal</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js?v=3.1.0"></script>
+</body>
+
+</html>
